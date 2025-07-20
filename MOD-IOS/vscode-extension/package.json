@@ -1,0 +1,27 @@
+{
+  "name": "mod-ios-forensic-visualizer",
+  "displayName": "MOD-IOS Forensic Visualizer",
+  "publisher": "moddux",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:extension.showTimeline"],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [{
+      "command": "extension.showTimeline",
+      "title": "Show Forensic Timeline"
+    }]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2",
+    "vscode": "^1.1.37"
+  }
+}

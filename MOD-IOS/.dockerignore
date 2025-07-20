@@ -1,0 +1,11 @@
+.git
+__pycache__
+*.pyc
+tests/
+.github/
+.gitignore
+docker-compose.yml
+install_deps.sh
+BUILD.md
+USAGE.md
+ROADMAP.md

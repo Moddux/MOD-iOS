@@ -1,0 +1,15 @@
+name: CI
+on: [push, pull_request]
+jobs:
+test:
+runs-on: ubuntu-22.04
+steps:
+- uses: actions/checkout@v3
+- name: Install deps
+run: sudo ./install_deps.sh
+- name: Lint shell
+run: shellcheck cli/.sh modules/.sh tests/*.sh
+- name: Lint python
+run: flake8 engine/meta_parser.py
+- name: Run smoke test
+run: bash tests/test_meta_case.sh

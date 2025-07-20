@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  mod-ios:
+    container_name: mod-ios
+    build: .
+    volumes:
+      - ./backups:/data:ro
+      - ./reports:/app/reports
+    tty: true
+    stdin_open: true

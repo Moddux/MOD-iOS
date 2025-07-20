@@ -1,0 +1,18 @@
+{
+  "modules": [
+    {"name": "identity_fingerprint", "version": "1.0.0"},
+    {"name": "exif_audit",       "version": "1.0.0"},
+    {"name": "ffprobe",          "version": "1.0.0"},
+    {"name": "mediainfo",        "version": "1.0.0"},
+    {"name": "mp4dump",          "version": "1.0.0"},
+    {"name": "bulk_extractor",   "version": "1.0.0"},
+    {"name": "file_carve",       "version": "1.0.0"},
+    {"name": "fs_timeline",      "version": "1.0.0"},
+    {"name": "plist_parser",     "version": "1.0.0"},
+    {"name": "image_tamper",     "version": "1.0.0"},
+    {"name": "gps_map",          "version": "1.0.0"},
+    {"name": "manifest_parser",  "version": "1.0.0"},
+    {"name": "misp_export",      "version": "1.0.0"},
+    {"name": "anomaly_detector", "version": "1.0.0"}
+  ]
+}

@@ -1,0 +1,19 @@
+default:
+  modules:
+    - identity_fingerprint
+    - exif_audit
+    - ffprobe
+    - mediainfo
+    - mp4dump
+    - bulk_extractor
+    - file_carve
+    - fs_timeline
+    - plist_parser
+    - image_tamper
+    - gps_map
+    - manifest_parser
+    - misp_export
+  concurrency: 4
+  misp:
+    url: "https://misp.example.com"
+    apikey: "YOUR_API_KEY"
