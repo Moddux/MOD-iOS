@@ -41,3 +41,13 @@ docker build -t mod-ios:latest .
    ```bash
    docker-compose exec mod-ios bash
    ```
+
+Ubuntu 24.04+ Notes
+
+If you see errors related to containerd.io, do the following before installing Docker:
+
+sudo apt-get remove containerd
+sudo apt-get autoremove --purge
+sudo apt-get install docker.io
+
+For bulk_extractor, see UPGRADE_NOTES.md for manual build instructions.

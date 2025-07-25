@@ -1,30 +1,16 @@
-# USAGE.md
+# MOD-iOS Usage Guide
 
-## Purpose
-Official CLI reference for cli/meta-ios.sh.
+## Quick Start
+1. Place your iOS backup in `backups/<backup_id>`
+2. Build & run with Docker Compose:
+   docker compose up --build -d
+3. Enter the running container:
+   docker compose exec mod-ios bash
+4. Run analysis (all-in-one or by module):
+   ./cli/meta-ios.sh --input /data/<backup_id>
+   ./modules/<module>.sh --input /data/<backup_id>
+5. Reports are written to /app/reports/ (container) and mapped to ./reports/ (host)
 
----
-
-## Command Syntax
-```bash
-./cli/meta-ios.sh --input <path_to_backup> [--module <module_name>]
-```
-
-## Flags
-- `--input <path>`   Required: path to the iOS backup directory.
-- `--module <name>`  Optional: run only that module.
-- `-h, --help`       Show help.
-
----
-
-## Examples
-
-1. Run all modules:
-   ```bash
-   ./cli/meta-ios.sh --input /data/ios_backup_xyz
-   ```
-
-2. Run only exif_audit:
-   ```bash
-   ./cli/meta-ios.sh --input /data/ios_backup_xyz --module exif_audit
-   ```
+## Troubleshooting
+- See UPGRADE_NOTES.md and BUILD.md for Ubuntu 24.04+ or Docker errors.
+- If `bulk-extractor` is missing, see UPGRADE_NOTES.md for manual build steps.

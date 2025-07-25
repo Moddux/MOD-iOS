@@ -1,10 +1,16 @@
-version: '3.8'
 services:
   mod-ios:
-    container_name: mod-ios
     build: .
+    image: mod-ios
+    container_name: mod-ios-mod-ios-1
     volumes:
-      - ./backups:/data:ro
+      - ./data:/data
       - ./reports:/app/reports
     tty: true
     stdin_open: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    runtime: nvidia

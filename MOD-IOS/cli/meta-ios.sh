@@ -6,19 +6,20 @@ MODULES=$ROOT/modules
 REPORTS=$ROOT/reports
 
 usage(){
-echo "Usage: $0 --input <backup_dir> [--module <name>]"
-exit 1
+  echo "Usage: $0 --input <backup_dir> [--module <name>]"
+  exit 1
 }
 
 INPUT="" ; MOD=""
 while [[ $# -gt 0 ]]; do
-case $1 in
---input) INPUT=$2; shift 2 ;;
---module) MOD=$2; shift 2 ;;
--h|--help) usage ;;
-*) usage ;;
-esac
+  case $1 in
+    --input) INPUT=$2; shift 2 ;;
+    --module) MOD=$2; shift 2 ;;
+    -h|--help) usage ;;
+    *) usage ;;
+  esac
 done
+
 [[ -d $INPUT ]] || { echo "Input not found"; exit 1; }
 
 BACKID=$(basename "$INPUT")
@@ -29,18 +30,21 @@ mkdir -p "$SESSION"
 :> "$SESSION/errors.log"
 
 run_module(){
-name=$1
-echo "[$(date)] START $name" | tee -a "$SESSION/audit.log"
-bash "$MODULES/${name}.sh" "$INPUT" "$SESSION" "$BACKID" >>"$SESSION/audit.log" 2>>"$SESSION/errors.log"
-echo "[$(date)] END $name" | tee -a "$SESSION/audit.log"
+  local name=$1
+  echo "[$(date)] START $name" | tee -a "$SESSION/audit.log"
+  if ! bash "$MODULES/$name" "$INPUT" "$SESSION" "$BACKID" >>"$SESSION/audit.log" 2>>"$SESSION/errors.log"; then
+    echo "[!] $name failed" | tee -a "$SESSION/audit.log"
+  fi
+  echo "[$(date)] END $name" | tee -a "$SESSION/audit.log"
 }
 
 if [[ -n $MOD ]]; then
-run_module $MOD
+  [[ "$MOD" == *.sh ]] || MOD="$MOD.sh"
+  run_module "$MOD"
 else
-for m in $(ls $MODULES/*.sh | xargs -n1 basename | sed 's/.sh//'); do
-run_module $m
-done
+  for m in "$MODULES"/*.sh; do
+    run_module "$(basename "$m")"
+  done
 fi
 
 echo "Output at $SESSION"

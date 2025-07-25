@@ -1,13 +1,13 @@
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.2.0-base-ubuntu22.04
+
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 
+# Copy and run dependency installer
 COPY install_deps.sh .
 RUN chmod +x install_deps.sh && ./install_deps.sh
 
+# Copy remaining app files if needed (placeholder)
 COPY . .
 
-RUN find cli/ modules/ tests/ -name "*.sh" -exec chmod +x {} \;
-RUN chmod +x engine/meta_parser.py
-
-ENTRYPOINT ["./cli/meta-ios.sh"]
+CMD ["/bin/bash"]

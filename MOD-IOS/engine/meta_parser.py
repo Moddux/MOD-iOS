@@ -1,20 +1,50 @@
 #!/usr/bin/env python3
-import argparse, sqlite3, pandas as pd, json, sys
+import sqlite3
+import pandas as pd
+from collections import defaultdict
 from pathlib import Path
+
+DB_PATH = Path.home() / "MOD-IOS/DB/meta_analysis.db"
+REPORTS_DIR = Path.home() / "MOD-IOS/REPORTS"
+REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+def connect_db():
+    return sqlite3.connect(DB_PATH)
+
+def fetch_metadata(conn):
+    return pd.read_sql_query("SELECT filename, field, value FROM metadata", conn)
+
+def analyze_field_consistency(df):
+    report = []
+    total_files = df['filename'].nunique()
+    presence = df.groupby('field')['filename'].nunique()
+    for field, count in presence.items():
+        if count < total_files:
+            report.append({
+                'field': field,
+                'present_in': count,
+                'missing_from': total_files - count
+            })
+    return pd.DataFrame(report)
+
+def detect_differences(df):
+    diff = defaultdict(set)
+    for _, row in df.iterrows():
+        diff[row['field']].add(row['value'])
+    inconsistent = {k: v for k, v in diff.items() if len(v) > 1}
+    return pd.DataFrame([(k, list(v)) for k, v in inconsistent.items()], columns=["Field", "Values"])
+
+def save_report(df, filename):
+    out_path = REPORTS_DIR / filename
+    df.to_csv(out_path, index=False)
+    print(f"[✓] Saved: {out_path}")
+
 def main():
-    p=argparse.ArgumentParser();
-    p.add_argument('--session',required=True); args=p.parse_args()
-    sess=Path(args.session); db=sess/'session.sqlite'
-    conn=sqlite3.connect(db)
-    # exif
-    for f in sess.glob('exif_audit/*.json'):
-        df=pd.read_json(f); df.to_sql('exif',conn,if_exists='append',index=False)
-    # ffprobe
-    for f in sess.glob('ffprobe/*.json'):
-        df=pd.read_json(f); df.to_sql('ffprobe',conn,if_exists='append',index=False)
-    # timeline
-    for f in sess.glob('fs_timeline/*_timeline.csv'):
-        df=pd.read_csv(f); df.to_sql('timeline',conn,if_exists='append',index=False)
-    conn.close()
-if __name__=='__main__':
+    conn = connect_db()
+    df = fetch_metadata(conn)
+    save_report(analyze_field_consistency(df), "inconsistent_field_presence.csv")
+    save_report(detect_differences(df), "conflicting_field_values.csv")
+    print("[✓] Done. Reports in ~/MOD-IOS/REPORTS")
+
+if __name__ == "__main__":
     main()
